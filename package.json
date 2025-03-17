@@ -1,0 +1,27 @@
+{
+  "name": "titanis-cache",
+  "version": "1.0.0",
+  "main": "index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "dayjs": "^1.11.13",
+    "jsdom": "^26.0.0",
+    "just-is-empty": "^3.4.1",
+    "lz-string": "^1.5.0",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.9"
+  }
+}
