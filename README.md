@@ -28,6 +28,14 @@ npm install titanis-cache
 
 ## Usage Example
 
+### 3 Steps
+
+- Init a store property `createTitanisCache`
+- Save data into the store `saveCache()`
+- Retreive data from the store `loadCache()`
+
+### See example
+
 ```javascript
 import { createTitanisCache } from 'titanis-cache';
 
@@ -94,3 +102,54 @@ Clear an Entire Storage Group
 ```javascript
 cache.clearCache(); // 🔥 Deletes all data stored under storageKey
 ```
+
+## Support for Multiple Items Under the Same storeName in Titanis Cache
+
+Your updated caching system allows storing multiple data items under the same storeName by using different dataKeys. This makes it easy to group related data under one section in LocalStorage while keeping them separately accessible.
+
+### How It Works
+When you call createTitanisCache multiple times with the same storeName, it organizes data like this:
+
+```
+AppCache
+  ├── "AnimalData"
+  │      ├── "ZooAnimals" { lastUpdated: '...', data: [...] }
+  │      ├── "WildAnimals" { lastUpdated: '...', data: [...] }
+  ├── "SalesData"
+         ├── "ZooIncome" { lastUpdated: '...', data: [...] }
+```
+
+- Each dataKey inside AnimalData stores separate cache entries.
+- All AnimalData-related caches are grouped under "AnimalData".
+
+### How to Use It
+You can add multiple caches under the same storeName like this:
+
+Storing Multiple Animal Data Sets
+
+```javascript
+const animalData = createTitanisCache({
+  storageKey: 'AppCache',  
+  storeName: 'AnimalData',  // 🔹 Grouped under 'AnimalData'
+  dataKey: 'ZooAnimals',  
+  cacheExpiration: (lastUpdate) => olderToday(lastUpdate), 
+});
+
+const wildAnimalData = createTitanisCache({
+  storageKey: 'AppCache',
+  storeName: 'AnimalData',  // 🔹 Still under 'AnimalData'
+  dataKey: 'WildAnimals',
+  cacheExpiration: (lastUpdate) => olderToday(lastUpdate), 
+});
+
+// ...
+
+animalData.saveCache([{ name: "Lion", species: "Panthera leo" }]);
+wildAnimalData.saveCache([{ name: "Wolf", species: "Canis lupus" }]);
+```
+
+🔥 Benefits
+- ✔ Organized Storage: Grouping related caches keeps things clean.
+- ✔ Efficient Access: You can fetch only the relevant subset without loading everything.
+- ✔ Flexible Expiration: Each cache entry has its own expiration logic.
+- ✔ Scalability: Works for any category, like SalesData, WeatherData, etc.
