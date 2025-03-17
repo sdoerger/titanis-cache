@@ -1,6 +1,7 @@
 {
   "name": "titanis-cache",
   "version": "1.0.0",
+  "description": "A lightweight LocalStorage caching solution with compression & expiration.",
   "main": "index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -11,10 +12,17 @@
     "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "keywords": ["localstorage", "cache", "typescript", "compression", "expiration"],
+  "author": "sdoerger",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sdoerger/titanis-cache.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sdoerger/titanis-cache/issues"
+  },
+  "homepage": "https://github.com/sdoerger/titanis-cache#readme",
+  "license": "MIT",
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "dayjs": "^1.11.13",
