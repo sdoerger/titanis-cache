@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { createLocalStorageCache } from "../src/index";
+import { createTitanisCache } from "../src/index";
 import dayjs from "dayjs";
 
 // ✅ Clear Storage Before Each Test
@@ -19,7 +19,7 @@ export function olderToday(lastUpdate: string | null | undefined): boolean {
 
 describe("LocalStorage Cache Helper", () => {
   it("should save and load cached data", () => {
-    const cache = createLocalStorageCache({
+    const cache = createTitanisCache({
       storageKey: "TestStorage",
       storeName: "TestStore",
       dataKey: "testData",
@@ -34,7 +34,7 @@ describe("LocalStorage Cache Helper", () => {
   });
 
   it("should return null if cache is expired", () => {
-    const cache = createLocalStorageCache({
+    const cache = createTitanisCache({
       storageKey: "TestStorage",
       storeName: "TestStore",
       dataKey: "testData",
@@ -47,7 +47,7 @@ describe("LocalStorage Cache Helper", () => {
   });
 
   it("should remove a specific key from cache", () => {
-    const cache = createLocalStorageCache({
+    const cache = createTitanisCache({
       storageKey: "TestStorage",
       storeName: "TestStore",
       dataKey: "testData",
@@ -61,14 +61,14 @@ describe("LocalStorage Cache Helper", () => {
   });
 
   it("should clear the entire store from cache", () => {
-    const cache1 = createLocalStorageCache({
+    const cache1 = createTitanisCache({
       storageKey: "TestStorage",
       storeName: "Store1",
       dataKey: "key1",
       cacheExpiration: olderToday,
     });
 
-    const cache2 = createLocalStorageCache({
+    const cache2 = createTitanisCache({
       storageKey: "TestStorage",
       storeName: "Store2",
       dataKey: "key2",

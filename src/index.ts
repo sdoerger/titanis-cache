@@ -62,7 +62,7 @@ interface LocalStorageCacheConfig {
   cacheExpiration: (lastUpdate: string | null | undefined) => boolean;
 }
 
-export function createLocalStorageCache<T>(
+export function createTitanisCache<T>(
   config: LocalStorageCacheConfig
 ): StorageHelper<T> {
   

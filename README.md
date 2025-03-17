@@ -29,10 +29,10 @@ npm install titanis-cache
 ## Usage Example
 
 ```javascript
-import { createLocalStorageCache } from 'titanis-cache';
+import { createTitanisCache } from 'titanis-cache';
 
 // ✅ Define a cache instance
-const animalData = createLocalStorageCache({
+const animalData = createTitanisCache({
   storageKey: 'AppCache',  // 🔹 LocalStorage key where all cached data is stored
   storeName: 'AnimalData', // 🔹 Sub-key inside storageKey (groups related data)
   dataKey: 'sessionInfo',  // 🔹 The actual data & lastUpdate timestamp are stored here
@@ -71,7 +71,7 @@ if (cachedAnimalData) {
 You can customize cacheExpiration to set different expiration rules:
 
 ```javascript
-const cache = createLocalStorageCache({
+const cache = createTitanisCache({
   storageKey: "AppCache",
   storeName: "WeatherData",
   dataKey: "forecast",
