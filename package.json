@@ -10,7 +10,9 @@
     "require": "./dist/index.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "npm run build:cjs && npm run build:esm",
+    "build:cjs": "tsc --project tsconfig.cjs.json",
+    "build:esm": "tsc --project tsconfig.esm.json",
     "prepublishOnly": "npm run build",
     "test": "vitest"
   },

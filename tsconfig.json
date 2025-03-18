@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "ES6",
-    "module": "CommonJS",
-    "declaration": true,
+    "target": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
     "outDir": "./dist",
-    "strict": true
+    "declaration": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": ["src"]
 }
