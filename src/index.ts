@@ -1,7 +1,12 @@
 import { compress, decompress } from "lz-string";
 
-import dayjs from "dayjs";
-import isEmpty from "just-is-empty";
+function isEmpty(data: any): boolean {
+  if (data == null) return true; // Handles null & undefined
+  if (typeof data === 'string') return data.trim().length === 0;
+  if (Array.isArray(data)) return data.length === 0;
+  if (typeof data === 'object') return Object.keys(data).length === 0;
+  return false;
+}
 
 export const isJsonString = (str: string): boolean => {
   try {
@@ -39,7 +44,7 @@ function formatStorageData(
     [storeName]: {
       ...storageData[storeName], // Preserve other store data
       [dataKey]: {
-        lastUpdate: dayjs().toISOString(),
+        lastUpdate: new Date().toISOString(),
         data: !isEmpty(data)
           ? compress(JSON.stringify(data))
           : storageData?.[storeName]?.[dataKey]?.data || {},

@@ -12,7 +12,9 @@
 # **Titanis Cache**  
 
 A lightweight **LocalStorage caching solution** with built-in **compression & expiration**.  
-Reduce API requests and improve performance by caching structured JSON in the browser.  
+Reduce API requests and improve performance by caching structured JSON in the browser.
+
+It is the code, you would have written yourself otherwise.
 
 ## 🚀 **Features**  
 ✅ **Efficient Storage:** Stores JSON data in **compressed format** (LZ-String)  
