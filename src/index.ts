@@ -1,4 +1,4 @@
-import { compress, decompress } from "lz-string";
+import lzString from "lz-string";
 
 function isEmpty(data: any): boolean {
   if (data == null) return true; // Handles null & undefined
@@ -46,7 +46,7 @@ function formatStorageData(
       [dataKey]: {
         lastUpdate: new Date().toISOString(),
         data: !isEmpty(data)
-          ? compress(JSON.stringify(data))
+          ? lzString.compress(JSON.stringify(data))
           : storageData?.[storeName]?.[dataKey]?.data || {},
       },
     },
@@ -85,7 +85,7 @@ export function createTitanisCache<T>(
     const storageIsEmpty = isEmpty(storeData?.[config.dataKey]?.data);
 
     if (!isExpired && !storageIsEmpty) {
-      const decompressedData = decompress(storeData[config.dataKey].data);
+      const decompressedData = lzString.decompress(storeData[config.dataKey].data);
       return safeParseJson(decompressedData) ?? null;
     }
 
