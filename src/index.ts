@@ -58,9 +58,10 @@ interface StorageHelper<T> {
   saveCache: (data: T) => void;
   removeKeyFromCache: () => void;
   clearCache: () => void;
+  loadOrFetch: (fetchFunc: () => Promise<T>) => Promise<T>
 }
 
-interface LocalStorageCacheConfig {
+interface LocalStorageCacheConfig<T> {
   storageKey: string; // New Root Key for all store data
   storeName: string;
   dataKey: string;
@@ -68,7 +69,7 @@ interface LocalStorageCacheConfig {
 }
 
 export function createTitanisCache<T>(
-  config: LocalStorageCacheConfig
+  config: LocalStorageCacheConfig<T>
 ): StorageHelper<T> {
   
   function loadCache(): T | null {
@@ -106,6 +107,24 @@ export function createTitanisCache<T>(
     localStorage.setItem(config.storageKey, formattedData);
   }
 
+  async function loadOrFetch(fetchFunc: () => T | Promise<T>): Promise<T> {
+
+    // === Load from Cache ===
+    const cachedData = loadCache();
+    if (cachedData) {
+      return cachedData
+    }
+    
+    // Get new data
+    const data = await fetchFunc()
+    
+    // === Save Cache ===
+    saveCache(data);
+
+    return data
+  }
+
+
   function removeKeyFromCache() {
     const existingData =
       safeParseJson(localStorage.getItem(config.storageKey)) || {};
@@ -127,6 +146,7 @@ export function createTitanisCache<T>(
   return {
     loadCache,
     saveCache,
+    loadOrFetch,
     removeKeyFromCache,
     clearCache,
   };

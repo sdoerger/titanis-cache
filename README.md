@@ -30,13 +30,39 @@ npm install titanis-cache
 
 ## Usage Example
 
-### 3 Steps
+### Automatic Caching (Recommended)
+
+```javascript
+const cache = createTitanisCache({
+  storageKey: "AppCache",
+  storeName: "UserData",
+  dataKey: "profile",
+  cacheExpiration: isBeforeToday, // Define expiration logic
+});
+
+// Fetch function that retrieves fresh data
+const fetchUserProfile = async () => {
+  const response = await fetch("/api/user/profile");
+  return response.json();
+};
+
+// Automatically loads from cache or fetches new data if needed
+const userProfile = await cache.loadOrFetch(fetchUserProfile);
+
+console.log(userProfile); // 🚀 Cached or freshly fetched data
+```
+
+### Manual Caching
+
+For cases, where you have more steps in between, just load save at your conveniance.
+
+#### 3 Steps
 
 - Init a store property `createTitanisCache`
 - Save data into the store `saveCache()`
 - Retreive data from the store `loadCache()`
 
-### See example
+#### See example
 
 ```javascript
 import { createTitanisCache } from 'titanis-cache';

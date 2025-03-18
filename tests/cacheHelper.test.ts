@@ -23,7 +23,7 @@ function isBeforeToday(dateString: string | null | undefined): boolean {
 
 
 describe("LocalStorage Cache Helper", () => {
-  it("should save and load cached data", () => {
+  it("should manually save and load cached data", () => {
     const cache = createTitanisCache({
       storageKey: "TestStorage",
       storeName: "TestStore",
@@ -36,6 +36,54 @@ describe("LocalStorage Cache Helper", () => {
     const loadedData = cache.loadCache();
 
     expect(loadedData).toEqual({ message: "Hello, Cache!" });
+  });
+
+  it("should return cached data via loadOrFetch", async () => {
+    const cache = createTitanisCache({
+      storageKey: "TestStorage",
+      storeName: "TestStore",
+      dataKey: "testData",
+      cacheExpiration: isBeforeToday,
+    });
+
+    // Mock cached data
+    cache.saveCache({ message: "Hello, Cache!" });
+
+    // Mock fetch function (should NOT be called if cache works)
+    const fetchFunc = vi.fn().mockResolvedValue({ message: "New Data" });
+
+    // Call loadOrFetch()
+    const loadedData = await cache.loadOrFetch(fetchFunc);
+    
+
+    // Expect cached data to be returned
+    expect(loadedData).toEqual({ message: "Hello, Cache!" });
+
+    // Ensure fetch function was NEVER called (because cache existed)
+    expect(fetchFunc).not.toHaveBeenCalled();
+  });
+
+  it("should return new data via loadOrFetch", async () => {
+    const cache = createTitanisCache({
+      storageKey: "TestStorage",
+      storeName: "TestStore",
+      dataKey: "testData",
+      cacheExpiration: isBeforeToday,
+    });
+
+    // Mock fetch function (should NOT be called if cache works)
+    const fetchFunc = vi.fn().mockResolvedValue({ message: "Hello fetched Data" });
+
+    // Call loadOrFetch()
+    const loadedData = await cache.loadOrFetch(fetchFunc);
+
+    const loadedCachedData = cache.loadCache();
+     
+    // Expect cached data to be returned
+    expect(loadedData).toEqual({ message: "Hello fetched Data" });
+
+    // Ensure fetch function was NEVER called (because cache existed)
+    expect(fetchFunc).toHaveBeenCalled();
   });
 
   it("should return null if cache is expired", () => {
