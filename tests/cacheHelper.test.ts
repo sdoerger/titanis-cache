@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { createTitanisCache } from "../src/index";
-import dayjs from "dayjs";
 
 // ✅ Clear Storage Before Each Test
 beforeEach(() => {
@@ -9,21 +8,27 @@ beforeEach(() => {
 });
 
 // Helper function to simulate expiration
-export function olderToday(lastUpdate: string | null | undefined): boolean {
-  if (!lastUpdate) return false; // Guard against null/undefined
+function isBeforeToday(dateString: string | null | undefined): boolean {
+  if(!dateString) return false
+  const parsedDate = new Date(dateString); // Convert to Date object
+  const today = new Date();
 
-  const parsedDate = dayjs(lastUpdate); // Ensure correct format
+  // Set time to midnight to compare only the date part
+  today.setHours(0, 0, 0, 0);
+  parsedDate.setHours(0, 0, 0, 0);
 
-  return parsedDate.isBefore(dayjs(), 'day'); // Checks if it's before today
+  return parsedDate < today; // ✅ Returns true if before today
 }
 
+
+
 describe("LocalStorage Cache Helper", () => {
-  it("should save and load cached data", () => {
+  it("should manually save and load cached data", () => {
     const cache = createTitanisCache({
       storageKey: "TestStorage",
       storeName: "TestStore",
       dataKey: "testData",
-      cacheExpiration: olderToday,
+      cacheExpiration: isBeforeToday,
     });
 
     cache.saveCache({ message: "Hello, Cache!" });
@@ -31,6 +36,54 @@ describe("LocalStorage Cache Helper", () => {
     const loadedData = cache.loadCache();
 
     expect(loadedData).toEqual({ message: "Hello, Cache!" });
+  });
+
+  it("should return cached data via loadOrFetch", async () => {
+    const cache = createTitanisCache({
+      storageKey: "TestStorage",
+      storeName: "TestStore",
+      dataKey: "testData",
+      cacheExpiration: isBeforeToday,
+    });
+
+    // Mock cached data
+    cache.saveCache({ message: "Hello, Cache!" });
+
+    // Mock fetch function (should NOT be called if cache works)
+    const fetchFunc = vi.fn().mockResolvedValue({ message: "New Data" });
+
+    // Call loadOrFetch()
+    const loadedData = await cache.loadOrFetch(fetchFunc);
+    
+
+    // Expect cached data to be returned
+    expect(loadedData).toEqual({ message: "Hello, Cache!" });
+
+    // Ensure fetch function was NEVER called (because cache existed)
+    expect(fetchFunc).not.toHaveBeenCalled();
+  });
+
+  it("should return new data via loadOrFetch", async () => {
+    const cache = createTitanisCache({
+      storageKey: "TestStorage",
+      storeName: "TestStore",
+      dataKey: "testData",
+      cacheExpiration: isBeforeToday,
+    });
+
+    // Mock fetch function (should NOT be called if cache works)
+    const fetchFunc = vi.fn().mockResolvedValue({ message: "Hello fetched Data" });
+
+    // Call loadOrFetch()
+    const loadedData = await cache.loadOrFetch(fetchFunc);
+
+    const loadedCachedData = cache.loadCache();
+     
+    // Expect cached data to be returned
+    expect(loadedData).toEqual({ message: "Hello fetched Data" });
+
+    // Ensure fetch function was NEVER called (because cache existed)
+    expect(fetchFunc).toHaveBeenCalled();
   });
 
   it("should return null if cache is expired", () => {
@@ -51,7 +104,7 @@ describe("LocalStorage Cache Helper", () => {
       storageKey: "TestStorage",
       storeName: "TestStore",
       dataKey: "testData",
-      cacheExpiration: olderToday,
+      cacheExpiration: isBeforeToday,
     });
 
     cache.saveCache({ message: "Removable Data" });
@@ -65,14 +118,14 @@ describe("LocalStorage Cache Helper", () => {
       storageKey: "TestStorage",
       storeName: "Store1",
       dataKey: "key1",
-      cacheExpiration: olderToday,
+      cacheExpiration: isBeforeToday,
     });
 
     const cache2 = createTitanisCache({
       storageKey: "TestStorage",
       storeName: "Store2",
       dataKey: "key2",
-      cacheExpiration: olderToday,
+      cacheExpiration: isBeforeToday,
     });
 
     cache1.saveCache({ message: "Data 1" });
