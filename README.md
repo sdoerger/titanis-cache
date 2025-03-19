@@ -181,3 +181,28 @@ wildAnimalData.saveCache([{ name: "Wolf", species: "Canis lupus" }]);
 - ✔ Efficient Access: You can fetch only the relevant subset without loading everything.
 - ✔ Flexible Expiration: Each cache entry has its own expiration logic.
 - ✔ Scalability: Works for any category, like SalesData, WeatherData, etc.
+
+## Additional Export: safeParseJson
+
+Alongside the caching functionality, titanis-cache also exports a safe JSON parser utility:
+
+🔹 safeParseJson
+A helper function that safely parses JSON strings without throwing errors.
+
+✅ Example Usage
+
+```javascript
+import { safeParseJson } from "titanis-cache";
+
+const jsonString = '{"key": "value"}';
+const parsedData = safeParseJson(jsonString);
+
+console.log(parsedData); // { key: "value" }
+```
+
+🚀 Features
+✅ Prevents crashes on invalid JSON
+✅ Logs warnings instead of throwing errors
+✅ Returns null for non-JSON strings
+
+Now, you can safely use it whenever you need to handle dynamic JSON inputs without risk!

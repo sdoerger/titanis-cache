@@ -8,30 +8,17 @@ function isEmpty(data: any): boolean {
   return false;
 }
 
-export const isJsonString = (str: string): boolean => {
-  try {
-    JSON.parse(str);
-    return true;
-  } catch (e) {
-    return false;
-  }
-};
-
-// Function to safely parse JSON
 export const safeParseJson = (str: string | undefined | null): any | null => {
-  if (!str) return null;
-  if (isJsonString(str)) {
-    try {
-      return JSON.parse(str);
-    } catch (e) {
-      console.error("Unexpected error during JSON parsing:", e);
-      return null; // Fallback in case of an unexpected error
-    }
-  } else {
-    console.warn("Invalid JSON string provided.");
+  if (typeof str !== "string" || !str.trim()) return null; // Handle null, undefined, and empty strings
+
+  try {
+    return JSON.parse(str);
+  } catch (error) {
+    console.error("❌ Failed to parse JSON:", error);
     return null;
   }
 };
+
 
 function formatStorageData(
   storageData: any,
@@ -71,7 +58,7 @@ interface LocalStorageCacheConfig<T> {
 export function createTitanisCache<T>(
   config: LocalStorageCacheConfig<T>
 ): TitanisCache<T> {
-  
+
   function loadCache(): T | null {
     const storedData =
       safeParseJson(localStorage.getItem(config.storageKey)) || {}; // 🔥 Load from root storageKey
@@ -114,10 +101,10 @@ export function createTitanisCache<T>(
     if (cachedData) {
       return cachedData
     }
-    
+
     // Get new data
     const data = await fetchFunc()
-    
+
     // === Save Cache ===
     saveCache(data);
 
