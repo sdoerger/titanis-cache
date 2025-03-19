@@ -1,6 +1,6 @@
 {
   "name": "titanis-cache",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "A lightweight LocalStorage caching solution with compression & expiration.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
