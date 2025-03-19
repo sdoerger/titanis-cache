@@ -53,7 +53,7 @@ function formatStorageData(
   });
 }
 
-interface StorageHelper<T> {
+export interface TitanisCache<T> {
   loadCache: () => T | null;
   saveCache: (data: T) => void;
   removeKeyFromCache: () => void;
@@ -70,7 +70,7 @@ interface LocalStorageCacheConfig<T> {
 
 export function createTitanisCache<T>(
   config: LocalStorageCacheConfig<T>
-): StorageHelper<T> {
+): TitanisCache<T> {
   
   function loadCache(): T | null {
     const storedData =
