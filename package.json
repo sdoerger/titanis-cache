@@ -10,7 +10,7 @@
     "require": "./dist/index.js"
   },
   "scripts": {
-    "build": "tsup",
+    "build": "tsup src/index.ts --minifyc",
     "test": "vitest"
   },
   "files": [
